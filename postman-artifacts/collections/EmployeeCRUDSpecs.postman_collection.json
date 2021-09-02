@@ -1,0 +1,1181 @@
+{
+	"info": {
+		"_postman_id": "d0e8cf5a-3d6d-4fb3-a7fe-5e697b737153",
+		"name": "Employee CRUD Specs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "POST Add Employee",
+			"item": [
+				{
+					"name": "AddEmployee_HappyPath",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Get the body in variable",
+									"const jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Validate that body is not null\", function () {",
+									"    pm.expect(jsonData).to.be.not.undefined;",
+									"    pm.expect(jsonData).to.be.not.null;",
+									"});",
+									"",
+									"const primaryBenefitPerYear = parseFloat(pm.variables.get(\"primaryBenefitPerYear\"));",
+									"const dependentBenefitPerYear = parseFloat(pm.variables.get(\"dependentBenefitPerYear\"));",
+									"const paychecks = parseFloat(pm.variables.get(\"paychecks\"));",
+									"const dependents = parseFloat(pm.variables.get(\"dependents\"));",
+									"const gross = parseFloat(pm.variables.get(\"gross\"));",
+									"",
+									"pm.test(\"Validate First Name\", function () {",
+									"    pm.expect(jsonData.firstName).to.eql(pm.variables.get(\"firstName\"));",
+									"});",
+									"",
+									"pm.test(\"Validate Last Name\", function () {",
+									"    pm.expect(jsonData.lastName).to.eql(pm.variables.get(\"lastName\"));",
+									"});",
+									"",
+									"pm.test(\"Validate Dependents Count\", function () {",
+									"    pm.expect(jsonData.dependants).to.eql(dependents);",
+									"});",
+									"",
+									"pm.test(\"Validate Salary\", function () {",
+									"    pm.expect(jsonData.salary).to.eql(parseFloat(pm.variables.get(\"salary\")));",
+									"});",
+									"",
+									"pm.test(\"Validate Gross Salary\", function () {",
+									"    pm.expect(jsonData.gross).to.eql(gross);",
+									"});",
+									"",
+									"const benefitsCost = (primaryBenefitPerYear / paychecks) + (dependentBenefitPerYear / paychecks * dependents);",
+									"",
+									"// Looking at Sample Post Employee API specs, there should be 7 decimals allowed for benefits cost",
+									"pm.test(\"Validate Benefits Cost\", function () {",
+									"    pm.expect(jsonData.benefitsCost).to.equal(+benefitsCost.toFixed(7));",
+									"});",
+									"",
+									"// Looking at Sample Post Employee API specs, there should be 5 decimals allowed for net salary",
+									"pm.test(\"Validate Net Salary\", function () {",
+									"    pm.expect(jsonData.net).to.eql(+(gross - benefitsCost).toFixed(5));",
+									"});",
+									"",
+									"// Save id in the environment variable for further API tests",
+									"pm.environment.set(\"id\", jsonData.id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"{{firstName}}\",\n    \"lastName\": \"{{lastName}}\",\n    \"dependants\": {{dependents}}\n}"
+						},
+						"url": {
+							"raw": "{{hostname}}/{{endpoint}}",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"{{endpoint}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddEmployee_Missing_FirstName",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"// Get the body in variable",
+									"const jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Verify response body is not null\", function () {",
+									"    pm.expect(jsonData).to.be.not.undefined;",
+									"    pm.expect(jsonData).to.be.not.null;",
+									"});",
+									"",
+									"pm.test(\"Verify first name error\", function () {",
+									"    pm.expect(jsonData[0].memberNames[0]).to.eql(\"FirstName\");",
+									"    pm.expect(jsonData[0].errorMessage).to.eql(\"The FirstName field is required.\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"lastName\": \"{{lastName}}\",\n    \"dependants\": {{dependents}}\n}"
+						},
+						"url": {
+							"raw": "{{hostname}}/{{endpoint}}",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"{{endpoint}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddEmployee_Empty_FirstName",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"// Get the body in variable",
+									"const jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Verify response body is not null\", function () {",
+									"    pm.expect(jsonData).to.be.not.undefined;",
+									"    pm.expect(jsonData).to.be.not.null;",
+									"});",
+									"",
+									"pm.test(\"Verify first name error\", function () {",
+									"    pm.expect(jsonData[0].memberNames[0]).to.eql(\"FirstName\");",
+									"    pm.expect(jsonData[0].errorMessage).to.eql(\"The FirstName field is required.\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"\",\n    \"lastName\": \"{{lastName}}\",\n    \"dependants\": {{dependents}}\n}"
+						},
+						"url": {
+							"raw": "{{hostname}}/{{endpoint}}",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"{{endpoint}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddEmployee_Missing_LastName",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"// Get the body in variable",
+									"const jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Verify response body is not null\", function () {",
+									"    pm.expect(jsonData).to.be.not.undefined;",
+									"    pm.expect(jsonData).to.be.not.null;",
+									"});",
+									"",
+									"pm.test(\"Verify last name error\", function () {",
+									"    pm.expect(jsonData[0].memberNames[0]).to.eql(\"LastName\");",
+									"    pm.expect(jsonData[0].errorMessage).to.eql(\"The LastName field is required.\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"{{firstName}}\",\n    \"dependants\": {{dependents}}\n}"
+						},
+						"url": {
+							"raw": "{{hostname}}/{{endpoint}}",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"{{endpoint}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddEmployee_Empty_LastName",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"// Get the body in variable",
+									"const jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Verify response body is not null\", function () {",
+									"    pm.expect(jsonData).to.be.not.undefined;",
+									"    pm.expect(jsonData).to.be.not.null;",
+									"});",
+									"",
+									"pm.test(\"Verify last name error\", function () {",
+									"    pm.expect(jsonData[0].memberNames[0]).to.eql(\"LastName\");",
+									"    pm.expect(jsonData[0].errorMessage).to.eql(\"The LastName field is required.\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"{{firstName}}\",\n    \"lastName\": \"\",\n    \"dependants\": {{dependents}}\n}"
+						},
+						"url": {
+							"raw": "{{hostname}}/{{endpoint}}",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"{{endpoint}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddEmployee_MIssing_Dependents",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Get the body in variable",
+									"const jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Validate that body is not null\", function () {",
+									"    pm.expect(jsonData).to.be.not.undefined;",
+									"    pm.expect(jsonData).to.be.not.null;",
+									"});",
+									"",
+									"const primaryBenefitPerYear = parseFloat(pm.variables.get(\"primaryBenefitPerYear\"));",
+									"const dependentBenefitPerYear = parseFloat(pm.variables.get(\"dependentBenefitPerYear\"));",
+									"const paychecks = parseFloat(pm.variables.get(\"paychecks\"));",
+									"const dependents = 0;",
+									"const gross = parseFloat(pm.variables.get(\"gross\"));",
+									"const benefitsCost = (primaryBenefitPerYear / paychecks) + (dependentBenefitPerYear / paychecks * dependents);",
+									"",
+									"pm.test(\"Validate First Name\", function () {",
+									"    pm.expect(jsonData.firstName).to.eql(pm.variables.get(\"firstName\"));",
+									"});",
+									"",
+									"pm.test(\"Validate Last Name\", function () {",
+									"    pm.expect(jsonData.lastName).to.eql(pm.variables.get(\"lastName\"));",
+									"});",
+									"",
+									"pm.test(\"Validate Dependents Count\", function () {",
+									"    pm.expect(jsonData.dependants).to.eql(dependents);",
+									"});",
+									"",
+									"pm.test(\"Validate Salary\", function () {",
+									"    pm.expect(jsonData.salary).to.eql(parseFloat(pm.variables.get(\"salary\")));",
+									"});",
+									"",
+									"pm.test(\"Validate Gross Salary\", function () {",
+									"    pm.expect(jsonData.gross).to.eql(gross);",
+									"});",
+									"",
+									"// Looking at Sample Post Employee API specs, there should be 7 decimals allowed for benefits cost",
+									"pm.test(\"Validate Benefits Cost\", function () {",
+									"    pm.expect(jsonData.benefitsCost).to.equal(+benefitsCost.toFixed(7));",
+									"});",
+									"",
+									"// Looking at Sample Post Employee API specs, there should be 5 decimals allowed for net salary",
+									"pm.test(\"Validate Net Salary\", function () {",
+									"    pm.expect(jsonData.net).to.eql(+(gross - benefitsCost).toFixed(5));",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"{{firstName}}\",\n    \"lastName\": \"{{lastName}}\"\n}"
+						},
+						"url": {
+							"raw": "{{hostname}}/{{endpoint}}",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"{{endpoint}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddEmployee_NegativeDependents",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"// Get the body in variable",
+									"const jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Verify response body is not null\", function () {",
+									"    pm.expect(jsonData).to.be.not.undefined;",
+									"    pm.expect(jsonData).to.be.not.null;",
+									"});",
+									"",
+									"pm.test(\"Verify last name error\", function () {",
+									"    pm.expect(jsonData[0].memberNames[0]).to.eql(\"Dependants\");",
+									"    pm.expect(jsonData[0].errorMessage).to.eql(\"The field Dependants must be between 0 and 32.\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"{{firstName}}\",\n    \"lastName\": \"{{lastName}}\",\n    \"dependants\": -1\n}"
+						},
+						"url": {
+							"raw": "{{hostname}}/{{endpoint}}",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"{{endpoint}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddEmployee_ThirtyThreeDependents",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"// Get the body in variable",
+									"const jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Verify response body is not null\", function () {",
+									"    pm.expect(jsonData).to.be.not.undefined;",
+									"    pm.expect(jsonData).to.be.not.null;",
+									"});",
+									"",
+									"pm.test(\"Verify last name error\", function () {",
+									"    pm.expect(jsonData[0].memberNames[0]).to.eql(\"Dependants\");",
+									"    pm.expect(jsonData[0].errorMessage).to.eql(\"The field Dependants must be between 0 and 32.\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"{{firstName}}\",\n    \"lastName\": \"{{lastName}}\",\n    \"dependants\": 33\n}"
+						},
+						"url": {
+							"raw": "{{hostname}}/{{endpoint}}",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"{{endpoint}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddEmployee_Missing_AllFields",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"// Get the body in variable",
+									"const jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Verify response body is not null\", function () {",
+									"    pm.expect(jsonData).to.be.not.undefined;",
+									"    pm.expect(jsonData).to.be.not.null;",
+									"});",
+									"",
+									"pm.test(\"Verify first name error\", function () {",
+									"    pm.expect(jsonData[0].memberNames[0]).to.eql(\"FirstName\");",
+									"    pm.expect(jsonData[0].errorMessage).to.eql(\"The FirstName field is required.\");",
+									"});",
+									"",
+									"pm.test(\"Verify last name error\", function () {",
+									"    pm.expect(jsonData[1].memberNames[0]).to.eql(\"LastName\");",
+									"    pm.expect(jsonData[1].errorMessage).to.eql(\"The LastName field is required.\");",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \n}"
+						},
+						"url": {
+							"raw": "{{hostname}}/{{endpoint}}",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"{{endpoint}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET Get Employee",
+			"item": [
+				{
+					"name": "GetEmployee_HappyPath",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verify that body is not null\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.not.null;\r",
+									"});\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"const primaryBenefitPerYear = parseFloat(pm.variables.get(\"primaryBenefitPerYear\"));\r",
+									"const dependentBenefitPerYear = parseFloat(pm.variables.get(\"dependentBenefitPerYear\"));\r",
+									"const paychecks = parseFloat(pm.variables.get(\"paychecks\"));\r",
+									"const dependents = parseFloat(pm.variables.get(\"dependents\"));\r",
+									"const gross = parseFloat(pm.variables.get(\"gross\"));\r",
+									"\r",
+									"pm.test(\"Validate First Name\", function () {\r",
+									"    pm.expect(jsonData.firstName).to.eql(pm.variables.get(\"firstName\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate Last Name\", function () {\r",
+									"    pm.expect(jsonData.lastName).to.eql(pm.variables.get(\"lastName\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate Dependents Count\", function () {\r",
+									"    pm.expect(jsonData.dependants).to.eql(dependents);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate Salary\", function () {\r",
+									"    pm.expect(jsonData.salary).to.eql(parseFloat(pm.variables.get(\"salary\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate Gross Salary\", function () {\r",
+									"    pm.expect(jsonData.gross).to.eql(gross);\r",
+									"});\r",
+									"\r",
+									"const benefitsCost = (primaryBenefitPerYear / paychecks) + (dependentBenefitPerYear / paychecks * dependents);\r",
+									"\r",
+									"// Looking at Sample Post Employee API specs, there should be 7 decimals allowed for benefits cost\r",
+									"pm.test(\"Validate Benefits Cost\", function () {\r",
+									"    pm.expect(jsonData.benefitsCost).to.equal(+benefitsCost.toFixed(7));\r",
+									"});\r",
+									"\r",
+									"// Looking at Sample Post Employee API specs, there should be 5 decimals allowed for net salary\r",
+									"pm.test(\"Validate Net Salary\", function () {\r",
+									"    pm.expect(jsonData.net).to.eql(+(gross - benefitsCost).toFixed(5));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{hostname}}/{{endpoint}}/{{id}}",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"{{endpoint}}",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetEmployee_NotFound",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{hostname}}/{{endpoint}}/74ebfba2-ced4-49ed-bc45-f59999999999",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"{{endpoint}}",
+								"74ebfba2-ced4-49ed-bc45-f59999999999"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetEmployee_InvalidID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// If we use an ID which is not in the format of valid ID range then we receive 500 status code\r",
+									"// We should see 404 Not Found instead\r",
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{hostname}}/{{endpoint}}/asd123",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"{{endpoint}}",
+								"asd123"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PUT Update Employee",
+			"item": [
+				{
+					"name": "UpdateEmployee_HappyPath",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verify that body is not null\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.not.null;\r",
+									"});\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"const primaryBenefitPerYear = parseFloat(pm.variables.get(\"primaryBenefitPerYear\"));\r",
+									"const dependentBenefitPerYear = parseFloat(pm.variables.get(\"dependentBenefitPerYear\"));\r",
+									"const paychecks = parseFloat(pm.variables.get(\"paychecks\"));\r",
+									"const dependents = parseFloat(pm.variables.get(\"updatedDependents\"));\r",
+									"const gross = parseFloat(pm.variables.get(\"gross\"));\r",
+									"\r",
+									"pm.test(\"Validate First Name\", function () {\r",
+									"    pm.expect(jsonData.firstName).to.eql(pm.variables.get(\"updatedFName\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate Last Name\", function () {\r",
+									"    pm.expect(jsonData.lastName).to.eql(pm.variables.get(\"updatedLName\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate Dependents Count\", function () {\r",
+									"    pm.expect(jsonData.dependants).to.eql(dependents);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate Salary\", function () {\r",
+									"    pm.expect(jsonData.salary).to.eql(parseFloat(pm.variables.get(\"salary\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate Gross Salary\", function () {\r",
+									"    pm.expect(jsonData.gross).to.eql(gross);\r",
+									"});\r",
+									"\r",
+									"const benefitsCost = (primaryBenefitPerYear / paychecks) + (dependentBenefitPerYear / paychecks * dependents);\r",
+									"\r",
+									"// Looking at Sample Post Employee API specs, there should be 7 decimals allowed for benefits cost\r",
+									"pm.test(\"Validate Benefits Cost\", function () {\r",
+									"    pm.expect(jsonData.benefitsCost).to.equal(+benefitsCost.toFixed(7));\r",
+									"});\r",
+									"\r",
+									"// Looking at Sample Post Employee API specs, there should be 5 decimals allowed for net salary\r",
+									"pm.test(\"Validate Net Salary\", function () {\r",
+									"    pm.expect(jsonData.net).to.eql(+(gross - benefitsCost).toFixed(5));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"{{id}}\",\r\n    \"firstName\": \"{{updatedFName}}\",\r\n    \"lastName\": \"{{updatedLName}}\",\r\n    \"dependants\": {{updatedDependents}}\r\n}"
+						},
+						"url": {
+							"raw": "{{hostname}}/{{endpoint}}",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"{{endpoint}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify_Updated_Employee",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verify that body is not null\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.not.null;\r",
+									"});\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"const primaryBenefitPerYear = parseFloat(pm.variables.get(\"primaryBenefitPerYear\"));\r",
+									"const dependentBenefitPerYear = parseFloat(pm.variables.get(\"dependentBenefitPerYear\"));\r",
+									"const paychecks = parseFloat(pm.variables.get(\"paychecks\"));\r",
+									"const dependents = parseFloat(pm.variables.get(\"updatedDependents\"));\r",
+									"const gross = parseFloat(pm.variables.get(\"gross\"));\r",
+									"\r",
+									"pm.test(\"Validate First Name\", function () {\r",
+									"    pm.expect(jsonData.firstName).to.eql(pm.variables.get(\"updatedFName\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate Last Name\", function () {\r",
+									"    pm.expect(jsonData.lastName).to.eql(pm.variables.get(\"updatedLName\"));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate Dependents Count\", function () {\r",
+									"    pm.expect(jsonData.dependants).to.eql(dependents);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate Salary\", function () {\r",
+									"    pm.expect(jsonData.salary).to.eql(parseFloat(pm.variables.get(\"salary\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate Gross Salary\", function () {\r",
+									"    pm.expect(jsonData.gross).to.eql(gross);\r",
+									"});\r",
+									"\r",
+									"const benefitsCost = (primaryBenefitPerYear / paychecks) + (dependentBenefitPerYear / paychecks * dependents);\r",
+									"\r",
+									"// Looking at Sample Post Employee API specs, there should be 7 decimals allowed for benefits cost\r",
+									"pm.test(\"Validate Benefits Cost\", function () {\r",
+									"    pm.expect(jsonData.benefitsCost).to.equal(+benefitsCost.toFixed(7));\r",
+									"});\r",
+									"\r",
+									"// Looking at Sample Post Employee API specs, there should be 5 decimals allowed for net salary\r",
+									"pm.test(\"Validate Net Salary\", function () {\r",
+									"    pm.expect(jsonData.net).to.eql(+(gross - benefitsCost).toFixed(5));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{hostname}}/{{endpoint}}/{{id}}",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"{{endpoint}}",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateEmployee_NonExistentId",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"// Get the body in variable\r",
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Invalid Id should not be created\", function () {\r",
+									"    pm.expect(jsonData.id).to.be.undefined;\r",
+									"});\r",
+									"\r",
+									"// Save invalid created id in the environment variable for further API tests\r",
+									"pm.environment.set(\"generatedInvalidID\", jsonData.id);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"74ebfba2-ced4-49ed-bc45-f59999999999\",\r\n    \"firstName\": \"{{updatedFName}}\",\r\n    \"lastName\": \"{{updatedLName}}\",\r\n    \"dependants\": {{updatedDependents}}\r\n}"
+						},
+						"url": {
+							"raw": "{{hostname}}/{{endpoint}}",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"{{endpoint}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET Get Employees",
+			"item": [
+				{
+					"name": "GetEmployeeList_HappyPath",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Verify that body is not null\", function () {\r",
+									"    pm.expect(jsonData).to.be.not.null;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verify that body is of type array\", function () {\r",
+									"    pm.expect(Array.isArray(jsonData)).to.be.true;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verify that test data exists in response array\", function () {\r",
+									"    let exists = false;\r",
+									"    jsonData.forEach(element => {\r",
+									"        if(element.id === pm.environment.get(\"id\")) {\r",
+									"            exists = true;\r",
+									"        }\r",
+									"    })\r",
+									"    pm.expect(exists).to.be.true;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{hostname}}/{{endpoint}}",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"{{endpoint}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "DELETE Delete Employee",
+			"item": [
+				{
+					"name": "Delete Employee",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{hostname}}/{{endpoint}}/{{id}}",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"{{endpoint}}",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
