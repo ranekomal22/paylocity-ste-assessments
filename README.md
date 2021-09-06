@@ -23,11 +23,11 @@ API automation testing is performed by using Postman Collection.
 
 Steps to execute the tests in Postman -
 1. Open Postman App
-2. Import Postman Environment (https://github.com/ranekomal22/paylocity-ste-assessments/blob/main/postman-artifacts/environments/testEnv.postman_environment.json)
+2. Import Postman Environment [Environment](https://github.com/ranekomal22/paylocity-ste-assessments/blob/main/postman-artifacts/environments/testEnv.postman_environment.json)
 3. Add API Auth token
-4. Import Postman Collection (https://github.com/ranekomal22/paylocity-ste-assessments/blob/main/postman-artifacts/collections/EmployeeCRUDSpecs.postman_collection.json)
+4. Import Postman Collection [Collection](https://github.com/ranekomal22/paylocity-ste-assessments/blob/main/postman-artifacts/collections/EmployeeCRUDSpecs.postman_collection.json)
 5. Click on Run Collection
-6. Import Data File (https://github.com/ranekomal22/paylocity-ste-assessments/blob/main/postman-artifacts/datafiles/test_data.json)
+6. Import Data File [Data File](https://github.com/ranekomal22/paylocity-ste-assessments/blob/main/postman-artifacts/datafiles/test_data.json)
 7. Run the collection
 
 ## API Testing Results
