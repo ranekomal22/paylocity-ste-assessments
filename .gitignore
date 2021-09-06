@@ -203,7 +203,7 @@ bower_components
 build/Release
 
 # Dependency directories
-node_modules/
+**/*/node_modules/
 jspm_packages/
 
 # Snowpack dependency directory (https://snowpack.dev/)
@@ -330,3 +330,9 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/node,macos,windows,java,visualstudiocode,intellij,powershell
+
+**/*/allure-report
+**/*/allure-results
+
+**/*/videos
+**/*/screenshots

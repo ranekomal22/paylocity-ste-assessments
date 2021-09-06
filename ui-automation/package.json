@@ -1,0 +1,21 @@
+{
+  "name": "paylocity-benefits-dashboard-tests",
+  "version": "1.0.0",
+  "description": "Cypress Test Framework for Paylocity Benefits Dashboard",
+  "main": "index.js",
+  "scripts": {
+    "cypress:open": "cypress open",
+    "test": "cypress run --spec \"**/*.feature\""
+  },
+  "author": "ranekomal22@gmail.com",
+  "license": "ISC",
+  "devDependencies": {
+    "@shelex/cypress-allure-plugin": "^2.11.1",
+    "cypress": "^8.3.1",
+    "cypress-cucumber-preprocessor": "^4.2.0",
+    "cypress-xpath": "^1.6.2"
+  },
+  "cypress-cucumber-preprocessor": {
+    "nonGlobalStepDefinitions": true
+  }
+}
