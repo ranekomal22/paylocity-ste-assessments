@@ -4,13 +4,13 @@ Benefits Dashboard application API and UI defect file available here: [paylocity
 # Part 2: Automation Challenge 
 
 ### Table of contents:
-1. [Automation challenge](#Automation-challenge)
-2. [API testing steps](#API-testing-steps)
-3. [API testing Results](#API-testing-Results)
-4. [UI testing steps](#UI-testing-steps)
-5. [Run UI test](#running-the-tests)
+1. [Automation Challenge](#Automation-Challenge)
+2. [API Testing Steps](#API-Testing-Steps)
+3. [API Testing Results](#API-Testing-Results)
+4. [UI Testing Steps](#UI-Testing-Steps)
+5. [Run UI Tests](#Run-UI-Tests)
 
-## Automation challenge     
+## Automation Challenge     
 
 One of the critical functions that Paylocity provide to clients is the ability to pay for their employees’ benefits packages. A portion of these costs are deducted from their paycheck, and Paylocity handle that deduction. below challenges executed for the sample Benefits Dashboard application:\
 • Using the API documentation provided, create and share at least one test for each API endpoint
@@ -34,7 +34,7 @@ Steps to execute the tests in Postman -
 <img width="893" alt="api-testing-results" src="https://user-images.githubusercontent.com/47266299/132166890-50e2c84e-eba0-426f-970a-7649cb7202e7.png">
 
 
-## UI testing steps
+## UI Testing Steps
 
 UI automation testing is performed for below user story using Cypress Cucumber framework
 
@@ -73,16 +73,23 @@ All the dependencies are managed by npm.\
 Install all required modules listed in the ./package.json file, run command: `npm install`\
 This will enable the page to work on a local environment without having to grab the files from other sources.
 
-## Run UI test
-To run the tests with cypress,execute below steps:
+## Run UI Tests
+To run the tests with cypress and Chrome browser, execute below steps:
 
 ```bash
 export CYPRESS_USER=<paylocity_username>
 export CYPRESS_PWD=<paylocity_password>
+export CYPRESS_API_TOKEN=<API_TOKEN_HERE>
 
-npm run cypress:open <Then >
+npm run cypress:open
 ```
 
-After the tests are completed the Cucumber BDD allure report can be generated adn seen on the browser.
+To run the tests with cypress and headless browser, execute below steps:
 
-## Sample Cucumber BDD Report:
+```bash
+export CYPRESS_USER=<paylocity_username>
+export CYPRESS_PWD=<paylocity_password>
+export CYPRESS_API_TOKEN=<API_TOKEN_HERE>
+
+npm run test
+```
