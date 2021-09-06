@@ -9,6 +9,7 @@ Benefits Dashboard application API and UI defect file available here: [paylocity
 3. [API Testing Results](#API-Testing-Results)
 4. [UI Testing Steps](#UI-Testing-Steps)
 5. [Run UI Tests](#Run-UI-Tests)
+6. [Defects Summary](#Defects-Summary)
 
 ## Automation Challenge     
 
@@ -104,3 +105,7 @@ https://youtu.be/M_YX09kvik8
 #### Test Execution Screenshots:
 <img width="1048" alt="screen-1" src="https://user-images.githubusercontent.com/47266299/132253576-c4c95fc4-4897-4b13-9d54-fb58dd45d73c.png">
 <img width="1058" alt="screen-2" src="https://user-images.githubusercontent.com/47266299/132253591-e6c9c5ff-f1d6-45bd-9834-12335a74c513.png">
+
+## Defects Summary
+UI Defects Summary is available here: [Defects](https://github.com/ranekomal22/paylocity-ste-assessments/blob/main/ui-automation/Defects.md)\
+API Defects Summary is available here: [Defects](https://github.com/ranekomal22/paylocity-ste-assessments/blob/main/postman-artifacts/Defects.md)
