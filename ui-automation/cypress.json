@@ -1,0 +1,9 @@
+{
+    "baseUrl": "https://wmxrwq14uc.execute-api.us-east-1.amazonaws.com/Prod/Account/Login",
+    "testFiles": "**/*.feature",
+    "env": {
+        "apiHostname": "https://wmxrwq14uc.execute-api.us-east-1.amazonaws.com/Prod/api/",
+        "endpoint": "employees",
+        "contentType": "application/json"
+    }
+}
