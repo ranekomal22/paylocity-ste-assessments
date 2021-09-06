@@ -74,6 +74,9 @@ Install all required modules listed in the ./package.json file, run command: `np
 This will enable the page to work on a local environment without having to grab the files from other sources.
 
 ## Run UI Tests
+**NOTE: 
+This automation framework deletes all existing Employees before starting UI tests so that the environment is always clean!!
+
 To run the tests with cypress and Chrome browser, execute below steps:
 
 ```bash
@@ -93,3 +96,11 @@ export CYPRESS_API_TOKEN=<API_TOKEN_HERE>
 
 npm run test
 ```
+
+## UI Automation Tests Results
+#### Test Execution Video:
+https://youtu.be/M_YX09kvik8
+
+#### Test Execution Screenshots:
+<img width="1048" alt="screen-1" src="https://user-images.githubusercontent.com/47266299/132253576-c4c95fc4-4897-4b13-9d54-fb58dd45d73c.png">
+<img width="1058" alt="screen-2" src="https://user-images.githubusercontent.com/47266299/132253591-e6c9c5ff-f1d6-45bd-9834-12335a74c513.png">
